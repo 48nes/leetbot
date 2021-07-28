@@ -1,0 +1,78 @@
+# every five minutes
+# for each person in database:
+# - check if still exist, if not delete them from hashmap (?)
+# scrape leetcode page
+# - check if most recent solved == saved data
+# - - if yes, continue
+# - - if no, loop through solved until == saved date OR solved reach end
+# - - - print out to discord
+# - - - save most recent solved in saved data slot
+
+# data structure
+# - leetcode username (String)
+# - most recently solved
+# - discord username
+# - problems solved -> easy, medium, hard
+
+
+# OTHER COMMANS
+# - add user (+add [username])
+# - - check if user exists on leetcode, discord user already has connected account, outputs error message
+# - - scrap leetcode page
+# - - svae most recently solved OR if none, save as none solved lol
+
+# - remove user (admin only/own account only) (+remove or ++remove [username])
+# - - check if user exists, outputs "This user was never registered"
+# - - removes user if they do exist
+
+# OTHER COMMANDS IMPLEMENT LATER
+# - stats (server?) (+top)
+# - mystats (+my)
+
+# PISSCORP TINGZ
+# - Wrong Answer, Runtime Error: 15277667
+# - Passed: 5025616
+# - Other Tingz: 15442752
+
+# {
+#   "embed": {
+#     "title": "New Submission!",
+#     "description": "{{ username }} has submitted an answer for [{{ name }}]({{ link }}) in {{ language }}.",
+#     "color": 5025616,
+#     "timestamp": "{{ time }}",
+#     "footer": {
+#       "icon_url": "{{ avatar }}",
+#       "text": "{{ pass/runtime error/wrong }}"
+#     }
+#   }
+# }
+
+# {
+#   "embed": {
+#     "title": "User Not Found",
+#     "description": "LeetBot was unable to find user {{ username }}.",
+#     "color": 15442752,
+#     "timestamp": "{{ time }}"
+#   }
+# }
+
+# {
+#   "embed": {
+#     "title": "Subscribed!",
+#     "description": "User [{{ username }}]({{ link }}) successfully added.",
+#     "color": 15442752,
+#     "timestamp": "2021-07-27T22:35:25.610Z"
+#   }
+# }
+
+# {
+#   "embed": {
+#     "title": "Unsubscribed!",
+#     "description": "User {{ username }} successfully removed.",
+#     "color": 15442752,
+#     "timestamp": "2021-07-27T22:35:25.610Z"
+#   }
+# }
+
+# time format: 2021-07-27T22:35:25.610Z
+
