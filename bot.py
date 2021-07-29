@@ -2,18 +2,22 @@
 import os
 
 # Obtain bot token from Discord Developer Site
-from typing import Union
-
 import discord
-from discord import Guild, Embed, User, Member, TextChannel
-from discord.abc import GuildChannel
-from discord.ext import commands
+from discord import Embed, User, Member, TextChannel
+from discord.ext import commands, tasks
 from discord.ext.commands import Context
 from datetime import datetime
 import requests
 
+import psycopg2 as sql
+from psycopg2 import OperationalError
+
+DATABASE_URL = os.environ['DATABASE_URL']
+
+conn = sql.connect(DATABASE_URL, sslmode='require')
+
 ####################
-BOT_TOKEN = "ODY5NzI4OTIwNTU4MjcyNTYy.YQCcLQ.za7S1EUaMQ7727bCX9c1YjBhVwg"
+BOT_TOKEN = os.getenv("BOT_TOKEN")
 
 # Creates the instances, uses "+" to activate commands
 
@@ -163,14 +167,50 @@ async def on_message(ctx: Context, message=""):
             await ctx.message.channel.send(embed=embed)
         else:
             new_channel: TextChannel = ctx.message.channel_mentions[0]
-            bot.channel = new_channel.id
+            global channel
+            channel = new_channel.id
             desc = "Channel successfully set to " + new_channel.mention + "."
             embed: Embed = discord.Embed(title="Channel Updated", description=desc, color=15442752)
 
             await ctx.message.channel.send(embed=embed)
 
 
-# TODO: auto scrape monkaS
+# TODO: auto scrape monkaS\
+@tasks.loop(seconds=5)
+async def sendmessage():
+    # do nothing
+    if channel != -1:
+        # TODO: cycle thru everyone and print out any changes :cursed:
+        await bot.get_channel(channel).send("hello")
+
+sendmessage.start()
+
+
+def connect(db_name, user_, password_, host_ip, port_):
+    connection = None
+    try:
+        connection = sql.connect(
+            database=db_name,
+            user=user_,
+            password=password_,
+            host=host_ip,
+            port=port_
+        )
+        print("Connection successful.")
+    except OperationalError as e:
+        print(f"Error '{e}' has occurred.")
+    return connection
+
+
+def query(connection, query_db):
+    connection.autocommit = True
+
+    try:
+        connection.cursor().execute(query_db)
+        print("Query executed.")
+    except OperationalError as e:
+        print(f"Error '{e}' has occurred.")
+
 
 # Runs the bot given bot token ID
 bot.run(BOT_TOKEN)
