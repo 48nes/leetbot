@@ -173,6 +173,15 @@ async def on_message(ctx: Context, message=""):
             embed: Embed = discord.Embed(title="Channel Updated", description=desc, color=15442752)
 
             await ctx.message.channel.send(embed=embed)
+    elif ctx.invoked_with == '+stop':
+        if not ctx.message.author.guild_permissions.administrator:
+            desc = "Channel setting is an admin only permission."
+            embed: Embed = discord.Embed(title="Permission Denied", description=desc, color=15442752)
+
+            await ctx.message.channel.send(embed=embed)
+            return
+
+        channel = -1
 
 
 # TODO: auto scrape monkaS\
