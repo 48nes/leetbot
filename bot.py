@@ -32,7 +32,7 @@ channel = -1
 
 
 # bot commands
-@bot.command(aliases=['help', 'add', 'remove', 'top', 'my', '+remove', '+set'])
+@bot.command(aliases=['help', 'add', 'remove', 'top', 'my', '+remove', '+set', '+stop'])
 async def on_message(ctx: Context, message=""):
     if ctx.invoked_with == 'help':
         # embed message
