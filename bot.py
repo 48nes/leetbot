@@ -182,6 +182,10 @@ async def on_message(ctx: Context, message=""):
             return
 
         channel = -1
+        desc = "Notifications successfully disabled."
+        embed: Embed = discord.Embed(title="Feed Disabled", description=desc, color=15442752)
+
+        await ctx.message.channel.send(embed=embed)
 
 
 # TODO: auto scrape monkaS\
