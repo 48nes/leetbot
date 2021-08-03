@@ -42,7 +42,8 @@ def create_tables():
             num_total INTEGER NOT NULL,
             num_easy INTEGER NOT NULL,
             num_medium INTEGER NOT NULL,
-            num_hard INTEGER NOT NULL
+            num_hard INTEGER NOT NULL,
+            total_subs INTEGER NOT NULL
         );
         """)
     sql_conn = None
@@ -88,13 +89,13 @@ def check_leetcode(leetcode_username):
         return users
 
 
-def insert_into_table(discord_id, leetcode_username, num_total, num_easy, num_medium, num_hard):
+def insert_into_table(discord_id, leetcode_username, num_total, num_easy, num_medium, num_hard, total_subs):
     con = sql.connect(DATABASE_URL, sslmode='require')
     cur = con.cursor()
     cur.execute(
-        "INSERT INTO users (discord_id,leetcode_username,num_total,num_easy,num_medium,num_hard) VALUES (%s,%s,%s,"
-        "%s,%s,%s)",
-        (discord_id, leetcode_username, num_total, num_easy, num_medium, num_hard,))
+        "INSERT INTO users (discord_id,leetcode_username,num_total,num_easy,num_medium,num_hard,total_subs) VALUES ("
+        "%s,%s,%s,%s,%s,%s,%s)",
+        (discord_id, leetcode_username, num_total, num_easy, num_medium, num_hard, total_subs,))
     con.commit()
     con.close()
 
