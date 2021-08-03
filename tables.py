@@ -82,7 +82,10 @@ def check_leetcode(leetcode_username):
     cur.execute("SELECT 1 FROM users WHERE leetcode_username=%s", (leetcode_username,))
     users = cur.fetchone()
     con.close()
-    return len(users) == 1
+    if users is None:
+        return ""
+    else:
+        return users
 
 
 def insert_into_table(discord_id, leetcode_username, most_recent, num_easy, num_medium, num_hard):
