@@ -121,7 +121,7 @@ def remove_by_leetcode(leetcode_username):
 def select_all():
     con = sql.connect(DATABASE_URL, sslmode='require')
     cur = con.cursor()
-    cur.execute("SELECT leetcode_username, num_total FROM users")
+    cur.execute("SELECT leetcode_username, total_subs FROM users")
     rows = cur.fetchall()
     con.commit()
     con.close()
