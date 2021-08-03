@@ -89,7 +89,8 @@ def insert_into_table(discord_id, leetcode_username, most_recent, num_easy, num_
     con = sql.connect(DATABASE_URL, sslmode='require')
     cur = con.cursor()
     cur.execute(
-        "INSERT INTO users (discord_id,leetcode_username,most_recent,num_problems) VALUES (%s,%s,%s,%s,%s,%s)",
+        "INSERT INTO users (discord_id,leetcode_username,most_recent,num_easy,num_medium,num_hard) VALUES (%s,%s,%s,"
+        "%s,%s,%s)", 
         (discord_id, leetcode_username, most_recent, num_easy, num_medium, num_hard,))
     con.commit()
     con.close()
