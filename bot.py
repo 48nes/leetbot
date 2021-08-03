@@ -71,7 +71,7 @@ async def on_message(ctx: Context, message=""):
         maybeLeetcode = check_discord(user.id)
 
         if maybeLeetcode != "":
-            registered_username = maybeLeetcode[0]
+            registered_username = ''.join(maybeLeetcode)
             print(registered_username)
             desc = "You are already registered under [" + registered_username + "](https://leetcode.com/" \
                    + maybeLeetcode + "/)."
