@@ -65,10 +65,10 @@ async def on_message(ctx: Context, message=""):
             await ctx.message.channel.send(embed=embed)
             return
 
-        user = ctx.message.author.id
+        user = ctx.message.author
         profilepic = user.avatar_url
 
-        maybeLeetcode = check_discord(user)
+        maybeLeetcode = check_discord(user.id)
 
         if maybeLeetcode != "":
             desc = "You are already registered under [" + maybeLeetcode + "](https://leetcode.com/" \
@@ -101,7 +101,7 @@ async def on_message(ctx: Context, message=""):
             medium = userData['submitStats']['acSubmissionNum'][2]['count']
             hard = userData['submitStats']['acSubmissionNum'][3]['count']
 
-            insert_into_table(user, message, most_recent, easy, medium, hard)
+            insert_into_table(user.id, message, most_recent, easy, medium, hard)
 
             now = datetime.now()
             currentTime = now.strftime("%d-%m-%y %H:%M")
