@@ -229,15 +229,49 @@ async def on_message(ctx: Context, message=""):
 
 
 @tasks.loop(minutes=5)
-async def sendmessage():
+async def send_message():
     rows = select_all()
+    new_submissions = []
+    for row in rows:
+        leetcode_user = ''.join(row[0])
+        prev_total = int(row[1])
+        userData = model.getUserData(leetcode_user)
+
+        current_total = userData['submitStats']['acSubmissionNum'][0]['submissions']
+
+        if current_total > prev_total:
+            userSubs = model.getRecentSubs(leetcode_user)
+            num_new_submissions = current_total - prev_total
+            for x in range(num_new_submissions):
+                new_submissions.insert(0, [leetcode_user, userSubs[x]['title'],
+                                           userSubs[x]['statusDisplay'], userSubs[x]['lang'],
+                                           userSubs[x]['titleSlug']])
+        total = userData['submitStats']['acSubmissionNum'][0]['count']
+        easy = userData['submitStats']['acSubmissionNum'][1]['count']
+        medium = userData['submitStats']['acSubmissionNum'][2]['count']
+        hard = userData['submitStats']['acSubmissionNum'][3]['count']
+
+        update_table(leetcode_user, total, easy, medium, hard, current_total)
 
     if channel != -1:
-        # TODO: cycle thru everyone and print out any changes :cursed:
-        await bot.get_channel(channel).send("hello")
+        for submission in new_submissions:
+            new_sub_embed(''.join(submission[0]), ''.join(submission[1]), ''.join(submission[2]),
+                          ''.join(submission[3]), ''.join(submission[4]))
 
 
-sendmessage.start()
+def new_sub_embed(leet_username, title, status, lang, slug):
+    desc = "" + leet_username + "has submitted an answer for [" + title + "](https://leetcode.com/problems/" + slug \
+           + ") in " + lang + "."
+
+    if status == "Accepted":
+        embed: Embed = discord.Embed(title="Accepted", description=desc, color=5025616)
+    else:
+        embed: Embed = discord.Embed(title=status, description=desc, color=15277667)
+
+    await bot.get_channel(channel).send(embed=embed)
+
+
+send_message.start()
 
 # Runs the bot given bot token ID
 bot.run(BOT_TOKEN)
