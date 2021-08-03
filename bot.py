@@ -32,9 +32,6 @@ bot.remove_command('help')
 # channel configuration
 channel = -1
 
-# database configuration
-create_tables()
-
 
 # bot commands
 @bot.command(aliases=['help', 'add', 'remove', 'top', 'my', '+remove', '+set', '+stop'])
@@ -229,10 +226,11 @@ async def on_message(ctx: Context, message=""):
         await ctx.message.channel.send(embed=embed)
 
 
-# TODO: auto scrape monkaS\
 @tasks.loop(minutes=5)
 async def sendmessage():
-    # do nothing
+    rows = select_all()
+    for row in rows:
+        print(row)
     if channel != -1:
         # TODO: cycle thru everyone and print out any changes :cursed:
         await bot.get_channel(channel).send("hello")
