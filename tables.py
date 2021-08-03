@@ -37,7 +37,7 @@ def create_tables():
     sql_commands = (
         """
         CREATE TABLE IF NOT EXISTS users (
-            discord_id INTEGER PRIMARY KEY,
+            discord_id BIGINT PRIMARY KEY,
             leetcode_username TEXT NOT NULL,
             most_recent TEXT,
             num_easy INTEGER NOT NULL,
