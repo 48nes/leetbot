@@ -243,9 +243,8 @@ async def send_message():
             userSubs = model.getRecentSubs(leetcode_user)
             num_new_submissions = current_total - prev_total
             for x in range(num_new_submissions):
-                new_submissions.insert(0, [leetcode_user, userSubs[x]['title'],
-                                           userSubs[x]['statusDisplay'], userSubs[x]['lang'],
-                                           userSubs[x]['titleSlug']])
+                new_submissions.insert(0, [leetcode_user, userSubs[x]['title'], userSubs[x]['lang'],
+                                           userSubs[x]['titleSlug'], userSubs[x]['statusDisplay']])
         total = userData['submitStats']['acSubmissionNum'][0]['count']
         easy = userData['submitStats']['acSubmissionNum'][1]['count']
         medium = userData['submitStats']['acSubmissionNum'][2]['count']
@@ -255,21 +254,17 @@ async def send_message():
 
     if channel != -1:
         for submission in new_submissions:
-            new_sub_embed(''.join(submission[0]), ''.join(submission[1]), ''.join(submission[2]),
-                          ''.join(submission[3]), ''.join(submission[4]))
+            desc = "" + ''.join(submission[0]) + "has submitted an answer for [" + ''.join(submission[1]) \
+                   + "](https://leetcode.com/problems/" + ''.join(submission[2]) \
+                   + ") in " + ''.join(submission[3]) + "."
 
-
-def new_sub_embed(leet_username, title, status, lang, slug):
-    desc = "" + leet_username + "has submitted an answer for [" + title + "](https://leetcode.com/problems/" + slug \
-           + ") in " + lang + "."
-
-    if status == "Accepted":
-        embed: Embed = discord.Embed(title="Accepted", description=desc, color=5025616)
-    else:
-        embed: Embed = discord.Embed(title=status, description=desc, color=15277667)
-
-    await bot.get_channel(channel).send(embed=embed)
-
+            status = ''.join(submission[4])
+            if status == "Accepted":
+                embed: Embed = discord.Embed(title="Accepted", description=desc, color=5025616)
+            else:
+                embed: Embed = discord.Embed(title=status, description=desc, color=15277667)
+            await bot.get_channel(channel).send(embed=embed)
+    
 
 send_message.start()
 
