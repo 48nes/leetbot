@@ -9,18 +9,20 @@ from discord.ext.commands import Context
 from datetime import datetime
 import requests
 
-import psycopg2 as sql
-from psycopg2 import OperationalError
-
-DATABASE_URL = os.environ['DATABASE_URL']
-
-conn = sql.connect(DATABASE_URL, sslmode='require')
+# PostgreSQL file
+import tables
+from tables import *
+from leetmodel import *
 
 ####################
 BOT_TOKEN = os.getenv("BOT_TOKEN")
+# ACCOUNT_KEY = os.getenv("ACCOUNT_KEY")
+
+username = "urmom12345"
+password = "urmom12345"
+model = leetmodel(username, password)
 
 # Creates the instances, uses "+" to activate commands
-
 intents = discord.Intents.default()
 intents.members = True
 bot = commands.Bot(command_prefix='+', intents=intents)
@@ -29,6 +31,9 @@ bot.remove_command('help')
 
 # channel configuration
 channel = -1
+
+# database configuration
+create_tables()
 
 
 # bot commands
@@ -60,15 +65,44 @@ async def on_message(ctx: Context, message=""):
             await ctx.message.channel.send(embed=embed)
             return
 
-        # TODO: check if discord user already has a linked account
-
-        user = ctx.message.author
+        user = ctx.message.author.id
         profilepic = user.avatar_url
+
+        maybeLeetcode = check_discord(user)
+
+        if maybeLeetcode != "":
+            desc = "You are already registered under [" + maybeLeetcode + "](https://leetcode.com/" \
+                   + maybeLeetcode + "/)."
+            embed: Embed = discord.Embed(title="Already Registered", description=desc, color=15442752)
+
+            await ctx.message.channel.send(embed=embed)
+            return
+
+        if check_leetcode(message):
+            desc = "Username [" + message + "](https://leetcode.com/" + message + "/) is already registered."
+            embed: Embed = discord.Embed(title="Already Registered", description=desc, color=15442752)
+
+            await ctx.message.channel.send(embed=embed)
+            return
 
         request = requests.get('http://leetcode.com/' + message + '/')
         # user exists on leetcode
         if request.status_code == 200:
-            # TODO: add leetcode username, discord username, most recently solved, total solved -> db
+
+            userData = model.getUserData(message)
+            userSubs = model.getRecentSubs(message)
+
+            if len(userSubs) > 0:
+                most_recent = userSubs[0]['title']
+            else:
+                most_recent = ""
+
+            easy = userData['submitStats']['acSubmissionNum'][1]['count']
+            medium = userData['submitStats']['acSubmissionNum'][2]['count']
+            hard = userData['submitStats']['acSubmissionNum'][3]['count']
+
+            insert_into_table(user, message, most_recent, easy, medium, hard)
+
             now = datetime.now()
             currentTime = now.strftime("%d-%m-%y %H:%M")
 
@@ -89,9 +123,14 @@ async def on_message(ctx: Context, message=""):
         profilepic = user.avatar_url
         leetcode_username = "placeholder"
 
-        # TODO: discord user not registered
+        if check_discord(user.id) == "":
+            desc = "You do not have an account."
+            embed: Embed = discord.Embed(title="Nothing to Remove", description=desc, color=15442752)
 
-        # TODO: remove from db
+            await ctx.message.channel.send(embed=embed)
+            return
+
+        remove_from_table(user.id)
 
         # success embed message
         now = datetime.now()
@@ -106,7 +145,7 @@ async def on_message(ctx: Context, message=""):
     elif ctx.invoked_with == 'top':
         # TODO: get the top from db
         # TODO: embed message
-        await ctx.message.channel.send('this command is still a massive wip lol')
+        await ctx.message.channel.send('Command is still WIP')
     elif ctx.invoked_with == 'my':
         # TODO: discord user is not registered
 
@@ -134,9 +173,15 @@ async def on_message(ctx: Context, message=""):
             await ctx.message.channel.send(embed=embed)
             return
 
-        # TODO: user not registered
+        if not check_leetcode(message):
+            desc = "Account is not registered."
+            embed: Embed = discord.Embed(title="Nothing to Remove", description=desc, color=15442752)
 
-        # TODO: remove user from db
+            await ctx.message.channel.send(embed=embed)
+            return
+
+        remove_by_leetcode(message)
+
         now = datetime.now()
         currentTime = now.strftime("%d-%m-%y %H:%M")
 
@@ -196,34 +241,8 @@ async def sendmessage():
         # TODO: cycle thru everyone and print out any changes :cursed:
         await bot.get_channel(channel).send("hello")
 
+
 sendmessage.start()
-
-
-def connect(db_name, user_, password_, host_ip, port_):
-    connection = None
-    try:
-        connection = sql.connect(
-            database=db_name,
-            user=user_,
-            password=password_,
-            host=host_ip,
-            port=port_
-        )
-        print("Connection successful.")
-    except OperationalError as e:
-        print(f"Error '{e}' has occurred.")
-    return connection
-
-
-def query(connection, query_db):
-    connection.autocommit = True
-
-    try:
-        connection.cursor().execute(query_db)
-        print("Query executed.")
-    except OperationalError as e:
-        print(f"Error '{e}' has occurred.")
-
 
 # Runs the bot given bot token ID
 bot.run(BOT_TOKEN)
