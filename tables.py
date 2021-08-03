@@ -39,7 +39,7 @@ def create_tables():
         CREATE TABLE IF NOT EXISTS users (
             discord_id BIGINT PRIMARY KEY,
             leetcode_username TEXT NOT NULL,
-            most_recent TEXT,
+            num_total INTEGER NOT NULL,
             num_easy INTEGER NOT NULL,
             num_medium INTEGER NOT NULL,
             num_hard INTEGER NOT NULL
@@ -88,13 +88,13 @@ def check_leetcode(leetcode_username):
         return users
 
 
-def insert_into_table(discord_id, leetcode_username, most_recent, num_easy, num_medium, num_hard):
+def insert_into_table(discord_id, leetcode_username, num_total, num_easy, num_medium, num_hard):
     con = sql.connect(DATABASE_URL, sslmode='require')
     cur = con.cursor()
     cur.execute(
-        "INSERT INTO users (discord_id,leetcode_username,most_recent,num_easy,num_medium,num_hard) VALUES (%s,%s,%s,"
-        "%s,%s,%s)", 
-        (discord_id, leetcode_username, most_recent, num_easy, num_medium, num_hard,))
+        "INSERT INTO users (discord_id,leetcode_username,num_total,num_easy,num_medium,num_hard) VALUES (%s,%s,%s,"
+        "%s,%s,%s)",
+        (discord_id, leetcode_username, num_total, num_easy, num_medium, num_hard,))
     con.commit()
     con.close()
 
@@ -115,4 +115,5 @@ def remove_by_leetcode(leetcode_username):
         "DELETE FROM users WHERE leetcode_username=%s", (leetcode_username,))
     con.commit()
     con.close()
+
 
