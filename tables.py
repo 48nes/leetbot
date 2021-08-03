@@ -127,3 +127,13 @@ def select_all():
     con.close()
     return rows
 
+
+def update_table(leetcode_username, num_total, num_easy, num_medium, num_hard, total_subs):
+    con = sql.connect(DATABASE_URL, sslmode='require')
+    cur = con.cursor()
+    cur.execute(
+        "UPDATE users SET num_total=%s, num_easy=%s, num_medium=%s, num_hard=%s, total_subs=%s WHERE "
+        "leetcode_username=%s", (num_total, num_easy, num_medium, num_hard, total_subs, leetcode_username,))
+    con.commit()
+    con.close()
+
