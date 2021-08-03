@@ -228,7 +228,7 @@ async def on_message(ctx: Context, message=""):
         await ctx.message.channel.send(embed=embed)
 
 
-@tasks.loop(minutes=5)
+@tasks.loop(seconds=30)
 async def send_message():
     rows = select_all()
     new_submissions = []
