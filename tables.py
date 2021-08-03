@@ -67,7 +67,7 @@ def create_tables():
 def check_discord(discord_id):
     con = sql.connect(DATABASE_URL, sslmode='require')
     cur = con.cursor()
-    cur.execute("SELECT leetcode_username FROM users WHERE discord_id=%d", (discord_id,))
+    cur.execute("SELECT leetcode_username FROM users WHERE discord_id=%s", (discord_id,))
     leetcode = cur.fetchone()
     con.close()
     if leetcode is None:
@@ -89,7 +89,7 @@ def insert_into_table(discord_id, leetcode_username, most_recent, num_easy, num_
     con = sql.connect(DATABASE_URL, sslmode='require')
     cur = con.cursor()
     cur.execute(
-        "INSERT INTO users (discord_id,leetcode_username,most_recent,num_problems) VALUES (%d,%s,%s,%d,%d,%d)",
+        "INSERT INTO users (discord_id,leetcode_username,most_recent,num_problems) VALUES (%s,%s,%s,%s,%s,%s)",
         (discord_id, leetcode_username, most_recent, num_easy, num_medium, num_hard,))
     con.commit()
     con.close()
@@ -99,7 +99,7 @@ def remove_from_table(discord_id):
     con = sql.connect(DATABASE_URL, sslmode='require')
     cur = con.cursor()
     cur.execute(
-        "DELETE FROM users WHERE discord_id=%d", (discord_id,))
+        "DELETE FROM users WHERE discord_id=%s", (discord_id,))
     con.commit()
     con.close()
 
