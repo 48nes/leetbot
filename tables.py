@@ -65,7 +65,7 @@ def create_tables():
 def check_discord(discord_id):
     con = sql.connect(DATABASE_URL, sslmode='require')
     cur = con.cursor()
-    cur.execute("SELECT leetcode_username FROM users WHERE discord_id =?", (discord_id,))
+    cur.execute("SELECT leetcode_username FROM users WHERE discord_id=?", (discord_id,))
     leetcode = cur.fetchone()
     con.close()
     if leetcode is None:
@@ -77,7 +77,7 @@ def check_discord(discord_id):
 def check_leetcode(leetcode_username):
     con = sql.connect(DATABASE_URL, sslmode='require')
     cur = con.cursor()
-    cur.execute("SELECT 1 FROM users WHERE leetcode_username =?", (leetcode_username,))
+    cur.execute("SELECT 1 FROM users WHERE leetcode_username=?", (leetcode_username,))
     num = cur.fetchone()
     con.close()
     return num == 1
@@ -92,3 +92,22 @@ def insert_into_table(discord_id, leetcode_username, most_recent, num_easy, num_
         (discord_id, leetcode_username, most_recent, num_problems))
     con.commit()
     con.close()
+
+
+def remove_from_table(discord_id):
+    con = sql.connect(DATABASE_URL, sslmode='require')
+    cur = con.cursor()
+    cur.execute(
+        "DELETE FROM users WHERE discord_id=?", (discord_id,))
+    con.commit()
+    con.close()
+
+
+def remove_by_leetcode(leetcode_username):
+    con = sql.connect(DATABASE_URL, sslmode='require')
+    cur = con.cursor()
+    cur.execute(
+        "DELETE FROM users WHERE leetcode_username=?", (leetcode_username,))
+    con.commit()
+    con.close()
+
