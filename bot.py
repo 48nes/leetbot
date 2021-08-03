@@ -255,8 +255,8 @@ async def send_message():
     if channel != -1:
         for submission in new_submissions:
             desc = "" + ''.join(submission[0]) + "has submitted an answer for [" + ''.join(submission[1]) \
-                   + "](https://leetcode.com/problems/" + ''.join(submission[2]) \
-                   + ") in " + ''.join(submission[3]) + "."
+                   + "](https://leetcode.com/problems/" + ''.join(submission[3]) \
+                   + ") in " + ''.join(submission[2]) + "."
 
             status = ''.join(submission[4])
             if status == "Accepted":
