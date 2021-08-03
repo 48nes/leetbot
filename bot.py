@@ -16,7 +16,7 @@ from leetmodel import *
 
 ####################
 BOT_TOKEN = os.getenv("BOT_TOKEN")
-ACCOUNT_KEY = os.getenv("ACCOUNT_KEY")
+# ACCOUNT_KEY = os.getenv("ACCOUNT_KEY")
 
 username = "urmom12345"
 password = "urmom12345"
@@ -91,18 +91,13 @@ async def on_message(ctx: Context, message=""):
         if request.status_code == 200:
 
             userData = model.getUserData(message)
-            userSubs = model.getRecentSubs(message)
 
-            if len(userSubs) > 0:
-                most_recent = userSubs[0]['title']
-            else:
-                most_recent = ""
-
+            total = userData['submitStats']['acSubmissionNum'][0]['count']
             easy = userData['submitStats']['acSubmissionNum'][1]['count']
             medium = userData['submitStats']['acSubmissionNum'][2]['count']
             hard = userData['submitStats']['acSubmissionNum'][3]['count']
 
-            insert_into_table(user.id, message, most_recent, easy, medium, hard)
+            insert_into_table(user.id, message, total, easy, medium, hard)
 
             now = datetime.now()
             currentTime = now.strftime("%d-%m-%y %H:%M")
@@ -235,7 +230,7 @@ async def on_message(ctx: Context, message=""):
 
 
 # TODO: auto scrape monkaS\
-@tasks.loop(seconds=5)
+@tasks.loop(minutes=5)
 async def sendmessage():
     # do nothing
     if channel != -1:
