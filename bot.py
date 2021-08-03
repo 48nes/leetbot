@@ -94,7 +94,9 @@ async def on_message(ctx: Context, message=""):
             medium = userData['submitStats']['acSubmissionNum'][2]['count']
             hard = userData['submitStats']['acSubmissionNum'][3]['count']
 
-            insert_into_table(user.id, message, total, easy, medium, hard)
+            total_subs = userData['submitStats']['acSubmissionNum'][0]['submissions']
+
+            insert_into_table(user.id, message, total, easy, medium, hard, total_subs)
 
             now = datetime.now()
             currentTime = now.strftime("%d-%m-%y %H:%M")
@@ -229,8 +231,7 @@ async def on_message(ctx: Context, message=""):
 @tasks.loop(minutes=5)
 async def sendmessage():
     rows = select_all()
-    for row in rows:
-        print(row)
+
     if channel != -1:
         # TODO: cycle thru everyone and print out any changes :cursed:
         await bot.get_channel(channel).send("hello")
