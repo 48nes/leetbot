@@ -40,7 +40,9 @@ def create_tables():
             discord_id INTEGER PRIMARY KEY,
             leetcode_username TEXT NOT NULL,
             most_recent TEXT,
-            num_problems INTEGER ARRAY[3]
+            num_easy INTEGER NOT NULL,
+            num_medium INTEGER NOT NULL,
+            num_hard INTEGER NOT NULL
         );
         """)
     sql_conn = None
@@ -65,7 +67,7 @@ def create_tables():
 def check_discord(discord_id):
     con = sql.connect(DATABASE_URL, sslmode='require')
     cur = con.cursor()
-    cur.execute("SELECT leetcode_username FROM users WHERE discord_id=" + discord_id + ";")
+    cur.execute("SELECT leetcode_username FROM users WHERE discord_id=%d", (discord_id,))
     leetcode = cur.fetchone()
     con.close()
     if leetcode is None:
@@ -77,7 +79,7 @@ def check_discord(discord_id):
 def check_leetcode(leetcode_username):
     con = sql.connect(DATABASE_URL, sslmode='require')
     cur = con.cursor()
-    cur.execute("SELECT 1 FROM users WHERE leetcode_username=" + leetcode_username + ";")
+    cur.execute("SELECT 1 FROM users WHERE leetcode_username=%s", (leetcode_username,))
     num = cur.fetchone()
     con.close()
     return num == 1
@@ -86,10 +88,9 @@ def check_leetcode(leetcode_username):
 def insert_into_table(discord_id, leetcode_username, most_recent, num_easy, num_medium, num_hard):
     con = sql.connect(DATABASE_URL, sslmode='require')
     cur = con.cursor()
-    num_problems = [num_easy, num_medium, num_hard]
     cur.execute(
-        "INSERT INTO users (discord_id,leetcode_username,most_recent,num_problems) VALUES (?,?,?,?);",
-        (discord_id, leetcode_username, most_recent, num_problems))
+        "INSERT INTO users (discord_id,leetcode_username,most_recent,num_problems) VALUES (%d,%s,%s,%d,%d,%d)",
+        (discord_id, leetcode_username, most_recent, num_easy, num_medium, num_hard,))
     con.commit()
     con.close()
 
@@ -98,7 +99,7 @@ def remove_from_table(discord_id):
     con = sql.connect(DATABASE_URL, sslmode='require')
     cur = con.cursor()
     cur.execute(
-        "DELETE FROM users WHERE discord_id=" + discord_id + ";")
+        "DELETE FROM users WHERE discord_id=%d", (discord_id,))
     con.commit()
     con.close()
 
@@ -107,7 +108,7 @@ def remove_by_leetcode(leetcode_username):
     con = sql.connect(DATABASE_URL, sslmode='require')
     cur = con.cursor()
     cur.execute(
-        "DELETE FROM users WHERE leetcode_username=" + leetcode_username + ";")
+        "DELETE FROM users WHERE leetcode_username=%s", (leetcode_username,))
     con.commit()
     con.close()
 
