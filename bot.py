@@ -71,7 +71,7 @@ async def on_message(ctx: Context, message=""):
         maybeLeetcode = check_discord(user.id)
 
         if maybeLeetcode != "":
-            desc = "You are already registered under [" + maybeLeetcode + "](https://leetcode.com/" \
+            desc = "You are already registered under [" + maybeLeetcode[0] + "](https://leetcode.com/" \
                    + maybeLeetcode + "/)."
             embed: Embed = discord.Embed(title="Already Registered", description=desc, color=15442752)
 
