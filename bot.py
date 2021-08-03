@@ -16,7 +16,7 @@ from leetmodel import *
 
 ####################
 BOT_TOKEN = os.getenv("BOT_TOKEN")
-# ACCOUNT_KEY = os.getenv("ACCOUNT_KEY")
+ACCOUNT_KEY = os.getenv("ACCOUNT_KEY")
 
 username = "urmom12345"
 password = "urmom12345"
@@ -78,10 +78,8 @@ async def on_message(ctx: Context, message=""):
 
             await ctx.message.channel.send(embed=embed)
             return
-        
-        print(check_leetcode(message))
 
-        if check_leetcode(message):
+        if check_leetcode(message) != "":
             desc = "Username [" + message + "](https://leetcode.com/" + message + "/) is already registered."
             embed: Embed = discord.Embed(title="Already Registered", description=desc, color=15442752)
 
