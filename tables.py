@@ -80,9 +80,9 @@ def check_leetcode(leetcode_username):
     con = sql.connect(DATABASE_URL, sslmode='require')
     cur = con.cursor()
     cur.execute("SELECT 1 FROM users WHERE leetcode_username=%s", (leetcode_username,))
-    num = cur.fetchone()
+    users = cur.fetchone()
     con.close()
-    return num == 1
+    return len(users) == 1
 
 
 def insert_into_table(discord_id, leetcode_username, most_recent, num_easy, num_medium, num_hard):
