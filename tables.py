@@ -88,6 +88,25 @@ def check_leetcode(leetcode_username):
     else:
         return users
 
+def get_top10(type):
+    lowered_type = type.lower()
+    con = sql.connect(DATABASE_URL, sslmode='require')
+    cur = con.cursor()
+    
+    if (lowered_type == "" or lowered_type == "all"):
+        cur.execute("SELECT leetcode_username, num_total FROM users ORDER BY num_total desc FETCH FIRST 10 ROWS ONLY")
+    elif (lowered_type == "easy"):
+        cur.execute("SELECT leetcode_username, num_easy FROM users ORDER BY num_easy desc FETCH FIRST 10 ROWS ONLY")
+    elif (lowered_type == "medium"):
+        cur.execute("SELECT leetcode_username, num_medium FROM users ORDER BY num_medium desc FETCH FIRST 10 ROWS ONLY")
+    elif (lowered_type == "hard"):
+        cur.execute("SELECT leetcode_username, num_hard FROM users ORDER BY num_hard desc FETCH FIRST 10 ROWS ONLY")
+    else:
+        raise ValueError("Invalid problem type for leaderboards")
+    
+    top10 = cur.fetchall()
+    con.close()
+    return top10
 
 def insert_into_table(discord_id, leetcode_username, num_total, num_easy, num_medium, num_hard, total_subs):
     con = sql.connect(DATABASE_URL, sslmode='require')
