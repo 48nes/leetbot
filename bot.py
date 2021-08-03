@@ -78,6 +78,8 @@ async def on_message(ctx: Context, message=""):
 
             await ctx.message.channel.send(embed=embed)
             return
+        
+        print(check_leetcode(message))
 
         if check_leetcode(message):
             desc = "Username [" + message + "](https://leetcode.com/" + message + "/) is already registered."
@@ -122,7 +124,7 @@ async def on_message(ctx: Context, message=""):
     elif ctx.invoked_with == 'remove':
         user = ctx.message.author
         profilepic = user.avatar_url
-        leetcode_username = "placeholder"
+        leetcode_username = ''.join(check_discord(user.id))
 
         if check_discord(user.id) == "":
             desc = "You do not have an account."
