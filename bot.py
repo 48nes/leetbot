@@ -149,7 +149,8 @@ async def on_message(ctx: Context, message=""):
             return
         
         desc = create_leaderboard(top10)
-        embed: Embed = discord.Embed(title="Submissions Leaderboard", description=desc, color=15442752)
+        tle = "Submissions Leaderboards" + ("(All)" if message == "" else "(" + message.capitalize() + ")")
+        embed: Embed = discord.Embed(title=tle, description=desc, color=15442752)
 
         await ctx.message.channel.send(embed=embed)
     elif ctx.invoked_with == 'my':
@@ -291,9 +292,9 @@ async def send_message():
 
     if channel != -1:
         for submission in new_submissions:
-            desc = "" + ''.join(submission[0]) + " has submitted an answer for [" + ''.join(submission[1]) \
+            desc = "User " + ''.join(submission[0]) + " has submitted an answer for [" + ''.join(submission[1]) \
                    + "](https://leetcode.com/problems/" + ''.join(submission[3]) \
-                   + ") in " + ''.join(submission[2]) + "."
+                   + ") in " + ''.join(submission[2].capitalize()) + "."
 
             status = ''.join(submission[4])
             now = datetime.now()
@@ -307,10 +308,14 @@ async def send_message():
             await bot.get_channel(channel).send(embed=embed)
 
 def create_leaderboard(top10):
-    res_string = "```\nRank  Username         Submissions\n"
+    res_string = "```\nRank  Username         Accepted\n"
     for i in range(len(top10)):
         row = top10[i]
-        res_string += "{num}     {name}".format(num = str(i + 1), name = row[0]) + (' ' * (17 - len(row[0]))) + str(row[1]) + '\n'
+        if (len(row[0]) > 15):
+            res_string += "{num}     {name}".format(num = str(i + 1), name = row[0][0:15]) + (' ' * (17 - len(row[0]))) + str(row[1]) + '\n'
+            res_string += "      " + row[0][15:len(row[0])] + '\n'
+        else:
+            res_string += "{num}     {name}".format(num = str(i + 1), name = row[0]) + (' ' * (17 - len(row[0]))) + str(row[1]) + '\n'
     res_string += "```"
     return res_string
 
