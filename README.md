@@ -34,7 +34,7 @@ The command prefix for LeetBot is currently set to `+`. Below are a list of comm
 
 `+top`, `+top easy`, `+top medium`, `+top hard` showcases the top ten users in terms of accepted solutions for all problems, only easy problems, only medium problems, and only hard problems
 
-<img src="img.png" alt="image of leaderboards" width="300"/>
+<img src="https://i.imgur.com/lpyBcHY.png" alt="image of leaderboards" width="300"/>
 
 `+my` showcases a user's own stats
 
