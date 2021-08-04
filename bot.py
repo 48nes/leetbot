@@ -157,12 +157,12 @@ async def on_message(ctx: Context, message=""):
 
         userData = model.getUserData(leetcode_username)
 
-        total = ''.join(userData['submitStats']['acSubmissionNum'][0]['count'])
-        easy = ''.join(userData['submitStats']['acSubmissionNum'][1]['count'])
-        medium = ''.join(userData['submitStats']['acSubmissionNum'][2]['count'])
-        hard = ''.join(userData['submitStats']['acSubmissionNum'][3]['count'])
+        total = str(userData['submitStats']['acSubmissionNum'][0]['count'])
+        easy = str(userData['submitStats']['acSubmissionNum'][1]['count'])
+        medium = str(userData['submitStats']['acSubmissionNum'][2]['count'])
+        hard = str(userData['submitStats']['acSubmissionNum'][3]['count'])
 
-        total_subs = ''.join(userData['submitStats']['acSubmissionNum'][0]['submissions'])
+        total_subs = str(userData['submitStats']['acSubmissionNum'][0]['submissions'])
 
         desc = "Stats retrieved for " + leetcode_username \
                + ". [View full stats breakdown here](https://leetcode.com/" + leetcode_username + "/)."
