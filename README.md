@@ -1,6 +1,6 @@
 # LeetBot
 
-LeetBot is a Discord bot that scrapes Leetcode user profiles and updates progress in real time. It is currently made to be self-hosted, see the setup section below for how to host.
+LeetBot is a Discord bot that scrapes Leetcode user profiles and updates progress in real time. It is currently made to be self-hosted, see the [setup section below](https://github.com/48nes/leetbot#how-to-host) for how to host.
 
 ## About
 
