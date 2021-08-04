@@ -262,6 +262,7 @@ async def send_message():
             if status == "Accepted":
                 embed: Embed = discord.Embed(title="Accepted", description=desc, color=5025616)
             else:
+                print(status)
                 embed: Embed = discord.Embed(title=status, description=desc, color=15277667)
             await bot.get_channel(channel).send(embed=embed)
     
