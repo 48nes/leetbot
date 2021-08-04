@@ -150,7 +150,7 @@ async def on_message(ctx: Context, message=""):
         
         max_username_length = 0
         for row in top10:
-            max_username_length = max(max_username_length, row[0])
+            max_username_length = max(max_username_length, len(row[0]))
         
         desc = create_leaderboard(top10, max_username_length)
         embed: Embed = discord.Embed(title="Submissions Leaderboard", description=desc, color=15442752)
