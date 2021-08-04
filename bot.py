@@ -149,7 +149,7 @@ async def on_message(ctx: Context, message=""):
             return
         
         desc = create_leaderboard(top10)
-        tle = "Submissions Leaderboards" + ("(All)" if message == "" else "(" + message.capitalize() + ")")
+        tle = "Submissions Leaderboards " + ("(All)" if message == "" else "(" + message.capitalize() + ")")
         embed: Embed = discord.Embed(title=tle, description=desc, color=15442752)
 
         await ctx.message.channel.send(embed=embed)
