@@ -310,7 +310,7 @@ def create_leaderboard(top10):
     res_string = "```\nRank  Username         Submissions\n"
     for i in range(len(top10)):
         row = top10[i]
-        res_string += "{num}     {name}".format(num = str(i), name = row[0]) + (' ' * (17 - len(row[0]))) + str(row[1]) + '\n'
+        res_string += "{num}     {name}".format(num = str(i + 1), name = row[0]) + (' ' * (17 - len(row[0]))) + str(row[1]) + '\n'
     res_string += "```"
     return res_string
 
