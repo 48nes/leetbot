@@ -155,7 +155,7 @@ async def on_message(ctx: Context, message=""):
             await ctx.message.channel.send(embed=embed)
             return
 
-        userData = model.getUserData(message)
+        userData = model.getUserData(leetcode_username)
 
         total = ''.join(userData['submitStats']['acSubmissionNum'][0]['count'])
         easy = ''.join(userData['submitStats']['acSubmissionNum'][1]['count'])
