@@ -81,5 +81,26 @@ Currently, we use [Heroku](https://dashboard.heroku.com/) to run our version of 
 7. Add another config var with `ACCOUNT_KEY` as the key and the username/password for your dummy account as the value. 
 8. Go back up to Resources. Under Dynos, select worker.
 9. Go to [Heroku Postgres](https://elements.heroku.com/addons/heroku-postgresql) and click Install. Add the database to the Heroku app.
+10. The database should now be viewable from the Overview tab, click on the database
+11. Go to the Settings tab for the database and View Credentials, save this information somewhere
+
+#### PostgreSQL Setup
+
+1. Download [PostgreSQL](https://www.postgresql.org/download/) locally
+2. Launch SQL Shell
+3. Follow prompts and enter in the data given from the last step on the Heroku setup
+4. Paste the following code into command prompt
+
+```sql
+CREATE TABLE IF NOT EXISTS users (
+            discord_id BIGINT PRIMARY KEY,
+            leetcode_username TEXT NOT NULL,
+            num_total INTEGER NOT NULL,
+            num_easy INTEGER NOT NULL,
+            num_medium INTEGER NOT NULL,
+            num_hard INTEGER NOT NULL,
+            total_subs INTEGER NOT NULL
+        );
+```
 
 After following these steps, the bot should run!
