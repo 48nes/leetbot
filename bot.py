@@ -311,10 +311,10 @@ async def send_message():
             await bot.get_channel(channel).send(embed=embed)
 
 def create_leaderboard(top10, max_name_length):
-    res_string = "```\nRank             Username             Submissions\n"
-    res_string += "1      dsafasdfsadfsdafsdafsadffdfdf  10\n"
-    res_string += "2                  name               7\n"
-    res_string += "3                  agnes              5\n```"
+    res_string = "```\nRank  Username           Submissions\n"
+    res_string += "1     ashdawngary        10\n"
+    res_string += "2     abcdefghijklmnop-  5\n"
+    res_string += "3     agnes              2\n```"
     
     return res_string
 
