@@ -16,11 +16,9 @@ from leetmodel import *
 
 ####################
 BOT_TOKEN = os.getenv("BOT_TOKEN")
-# ACCOUNT_KEY = os.getenv("ACCOUNT_KEY")
+ACCOUNT_KEY = os.getenv("ACCOUNT_KEY")
 
-username = "urmom12345"
-password = "urmom12345"
-model = leetmodel(username, password)
+model = leetmodel(ACCOUNT_KEY, ACCOUNT_KEY)
 
 # Creates the instances, uses "+" to activate commands
 intents = discord.Intents.default()
