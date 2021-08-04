@@ -137,9 +137,25 @@ async def on_message(ctx: Context, message=""):
 
         await ctx.message.channel.send(embed=embed)
     elif ctx.invoked_with == 'top':
-        # TODO: get the top from db
-        # TODO: embed message
-        await ctx.message.channel.send('Command is still WIP')
+        top10 = None
+        try:
+            top10 = get_top10(message)
+        except ValueError as e:
+            await ctx.message.channel.send('+top must be followed by all, easy, medium, or hard, instead given' + message)
+            return
+        
+        if (len(top10) == 0):
+            await ctx.message.channel.send('No users present in database. Unable to create a leaderboard.')
+            return
+        
+        max_username_length = 0
+        for row in top10:
+            max_username_length = max(max_username_length, row[0])
+        
+        desc = create_leaderboard(top10, max_username_length)
+        embed: Embed = discord.Embed(title="Submissions Leaderboard", description=desc, color=15442752)
+
+        await ctx.message.channel.send(embed=embed)
     elif ctx.invoked_with == 'my':
         user = ctx.message.author
         profilepic = user.avatar_url
@@ -293,6 +309,15 @@ async def send_message():
                 embed: Embed = discord.Embed(title=status, description=desc, color=15277667)
                 embed.set_footer(text=currentTime)
             await bot.get_channel(channel).send(embed=embed)
+
+def create_leaderboard(top10, max_name_length):
+    res_string = "Rank             Username             Submissions\n"
+    res_string += "1      dsafasdfsadfsdafsdafsadffdfdf  10\n"
+    res_string += "2                  name               7\n"
+    res_string += "3                  agnes              5\n"
+    
+    return res_string
+
 
 
 send_message.start()
