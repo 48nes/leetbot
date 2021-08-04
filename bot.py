@@ -258,11 +258,11 @@ async def send_message():
                    + "](https://leetcode.com/problems/" + ''.join(submission[3]) \
                    + ") in " + ''.join(submission[2]) + "."
 
-            status = ''.join(submission[4])
+            status = ''.join(submission[4])            
+            print(status)
             if status == "Accepted":
                 embed: Embed = discord.Embed(title="Accepted", description=desc, color=5025616)
             else:
-                print(status)
                 embed: Embed = discord.Embed(title=status, description=desc, color=15277667)
             await bot.get_channel(channel).send(embed=embed)
     
