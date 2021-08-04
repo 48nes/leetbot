@@ -141,7 +141,7 @@ async def on_message(ctx: Context, message=""):
         try:
             top10 = get_top10(message)
         except ValueError as e:
-            await ctx.message.channel.send('+top must be followed by all, easy, medium, or hard, instead given' + message)
+            await ctx.message.channel.send('+top must be followed by all, easy, medium, or hard, instead given ' + message)
             return
         
         if (len(top10) == 0):
