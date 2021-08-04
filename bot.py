@@ -42,12 +42,13 @@ async def on_message(ctx: Context, message=""):
         embed.add_field(name="View Commands", value="`+help`", inline=False)
         embed.add_field(name="Connecting your LeetCode account", value="`+add [username]`", inline=False)
         embed.add_field(name="Removing your LeetCode account", value="`+remove`", inline=False)
-        embed.add_field(name="View server leaderboard", value="`+top`", inline=False)
+        embed.add_field(name="View server leaderboard", value="`+top`, `+top easy`, `+top medium`, `+top hard`", inline=False)
         embed.add_field(name="View your profile", value="`+my`", inline=False)
         embed.add_field(name="Remove a LeetCode account [MOD ONLY]", value="`++remove [username]`", inline=False)
         embed.add_field(name="Set server for LeetCode feed [MOD ONLY]", value="`++set [channel]`", inline=False)
+        embed.add_field(name="Stop server feed [MOD ONLY]", value="`++stop`", inline=False)
         embed.add_field(name="Need more help?",
-                        value="[Github](https://github.com/48nes/) . [Discord](https://github.com/48nes/)",
+                        value="[Github](https://github.com/48nes/leetbot)",
                         inline=False)
 
         await ctx.message.channel.send(embed=embed)
@@ -140,14 +141,40 @@ async def on_message(ctx: Context, message=""):
         # TODO: embed message
         await ctx.message.channel.send('Command is still WIP')
     elif ctx.invoked_with == 'my':
-        # TODO: discord user is not registered
+        user = ctx.message.author
+        profilepic = user.avatar_url
+        leetcode_username = ''.join(check_discord(user.id))
 
-        # TODO: embed message with:
-        # - total problems solved
-        # - total easy
-        # - total medium
-        # - total hard
-        await ctx.message.channel.send('this command is still a massive wip lol')
+        now = datetime.now()
+        currentTime = now.strftime("%d-%m-%y %H:%M")
+
+        if check_discord(user.id) == "":
+            desc = "You do not have an account registered."
+            embed: Embed = discord.Embed(title="Couldn't Find Account", description=desc, color=15442752)
+
+            await ctx.message.channel.send(embed=embed)
+            return
+
+        userData = model.getUserData(message)
+
+        total = ''.join(userData['submitStats']['acSubmissionNum'][0]['count'])
+        easy = ''.join(userData['submitStats']['acSubmissionNum'][1]['count'])
+        medium = ''.join(userData['submitStats']['acSubmissionNum'][2]['count'])
+        hard = ''.join(userData['submitStats']['acSubmissionNum'][3]['count'])
+
+        total_subs = ''.join(userData['submitStats']['acSubmissionNum'][0]['submissions'])
+
+        desc = "Stats retrieved for " + leetcode_username \
+               + ". [View full stats breakdown here](https://leetcode.com/" + leetcode_username + "/)."
+        embed: Embed = discord.Embed(description=desc, color=15442752)
+        embed.add_field(name="Total", value=total, inline=False)
+        embed.add_field(name="Submissions (Year)", value=total_subs, inline=False)
+        embed.add_field(name="Easy", value=easy, inline=True)
+        embed.add_field(name="Medium", value=medium, inline=True)
+        embed.add_field(name="Hard", value=hard, inline=True)
+
+        embed.set_footer(text=currentTime, icon_url=profilepic)
+        await ctx.message.channel.send(embed=embed)
     elif ctx.invoked_with == '+remove':
         user = ctx.message.author
         profilepic = user.avatar_url
@@ -257,12 +284,16 @@ async def send_message():
                    + ") in " + ''.join(submission[2]) + "."
 
             status = ''.join(submission[4])
+            now = datetime.now()
+            currentTime = now.strftime("%d-%m-%y %H:%M")
             if status == "Accepted":
                 embed: Embed = discord.Embed(title="Accepted", description=desc, color=5025616)
+                embed.set_footer(text=currentTime)
             else:
                 embed: Embed = discord.Embed(title=status, description=desc, color=15277667)
+                embed.set_footer(text=currentTime)
             await bot.get_channel(channel).send(embed=embed)
-    
+
 
 send_message.start()
 
