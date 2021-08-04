@@ -4,25 +4,12 @@ from psycopg2 import OperationalError
 
 DATABASE_URL = os.environ['DATABASE_URL']
 
-conn = sql.connect(DATABASE_URL, sslmode='require')
-
-
-def connect(db_name, user_, password_, host_ip, port_):
-    connection = None
-    try:
-        connection = sql.connect(
-            database=db_name,
-            user=user_,
-            password=password_,
-            host=host_ip,
-            port=port_
-        )
-        print("Connection successful.")
-    except OperationalError as e:
-        print(f"Error '{e}' has occurred.")
-    return connection
-
-
+'''
+Executes the SQL query on the database connected to the connection object.
+:type connection: Connection
+:type query_db: String
+:return: void
+'''
 def query(connection, query_db):
     connection.autocommit = True
 
@@ -32,39 +19,12 @@ def query(connection, query_db):
     except OperationalError as e:
         print(f"Error '{e}' has occurred.")
 
-
-def create_tables():
-    sql_commands = (
-        """
-        CREATE TABLE IF NOT EXISTS users (
-            discord_id BIGINT PRIMARY KEY,
-            leetcode_username TEXT NOT NULL,
-            num_total INTEGER NOT NULL,
-            num_easy INTEGER NOT NULL,
-            num_medium INTEGER NOT NULL,
-            num_hard INTEGER NOT NULL,
-            total_subs INTEGER NOT NULL
-        );
-        """)
-    sql_conn = None
-    try:
-        # connect to the PostgreSQL server
-        sql_conn = sql.connect(DATABASE_URL, sslmode='require')
-        cur = conn.cursor()
-        # create table one by one
-        for command in sql_commands:
-            cur.execute(command)
-        # close communication with the PostgreSQL database server
-        cur.close()
-        # commit the changes
-        sql_conn.commit()
-    except (Exception, sql.DatabaseError) as error:
-        print(error)
-    finally:
-        if sql_conn is not None:
-            sql_conn.close()
-
-
+'''
+Gets the leetcode username associated with the given discord id or the empty 
+string if there is none.
+:type discord_id: Long
+:return: String
+'''
 def check_discord(discord_id):
     con = sql.connect(DATABASE_URL, sslmode='require')
     cur = con.cursor()
@@ -76,7 +36,11 @@ def check_discord(discord_id):
     else:
         return leetcode
 
-
+'''
+Checks if the leetcode username is contained in the database. Returns 1 if true, or the empty string if false.
+:type leetcode_username: String
+:return: String
+'''
 def check_leetcode(leetcode_username):
     con = sql.connect(DATABASE_URL, sslmode='require')
     cur = con.cursor()
@@ -88,6 +52,13 @@ def check_leetcode(leetcode_username):
     else:
         return users
 
+'''
+Gets the top ten leetcode users stored in the database. 
+This is determined by problems done, either all, easy, medium, or hard problems.
+:type type: String
+:return: List[tuples]
+:ValueError: if the type is not supported.
+'''
 def get_top10(type):
     lowered_type = type.lower()
     con = sql.connect(DATABASE_URL, sslmode='require')
@@ -108,6 +79,17 @@ def get_top10(type):
     con.close()
     return top10
 
+'''
+Inserts the leetcode profile under the given discord id into the database.
+:type discord_id: Long
+:type leetcode_username: String
+:type num_total: int
+:type num_easy: int
+:type num_medium: int
+:type num_hard: int
+:type total_subs: int
+:return: void
+'''
 def insert_into_table(discord_id, leetcode_username, num_total, num_easy, num_medium, num_hard, total_subs):
     con = sql.connect(DATABASE_URL, sslmode='require')
     cur = con.cursor()
@@ -118,7 +100,11 @@ def insert_into_table(discord_id, leetcode_username, num_total, num_easy, num_me
     con.commit()
     con.close()
 
-
+"""
+Removes the user associated with the given discord id from the database if the user exists.
+:type discord_id: Long
+:return: void
+"""
 def remove_from_table(discord_id):
     con = sql.connect(DATABASE_URL, sslmode='require')
     cur = con.cursor()
@@ -127,7 +113,11 @@ def remove_from_table(discord_id):
     con.commit()
     con.close()
 
-
+"""
+Removes the user associated with the given leetcode username from the database if the user exists.
+:type leetcode_username: String
+:return: void
+"""
 def remove_by_leetcode(leetcode_username):
     con = sql.connect(DATABASE_URL, sslmode='require')
     cur = con.cursor()
@@ -136,7 +126,10 @@ def remove_by_leetcode(leetcode_username):
     con.commit()
     con.close()
 
-
+"""
+Returns a list of all users in the database with their leetcode usernames and total submissions.
+:return: List[tuple]
+"""
 def select_all():
     con = sql.connect(DATABASE_URL, sslmode='require')
     cur = con.cursor()
@@ -146,7 +139,16 @@ def select_all():
     con.close()
     return rows
 
-
+'''
+Updates the given user's information in the database.
+:type leetcode_username: String
+:type num_total: int
+:type num_easy: int
+:type num_medium: int
+:type num_hard: int
+:type total_subs: int
+:return: void
+'''
 def update_table(leetcode_username, num_total, num_easy, num_medium, num_hard, total_subs):
     con = sql.connect(DATABASE_URL, sslmode='require')
     cur = con.cursor()
@@ -155,4 +157,3 @@ def update_table(leetcode_username, num_total, num_easy, num_medium, num_hard, t
         "leetcode_username=%s", (num_total, num_easy, num_medium, num_hard, total_subs, leetcode_username,))
     con.commit()
     con.close()
-
