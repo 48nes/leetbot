@@ -238,6 +238,8 @@ async def send_message():
         userData = model.getUserData(leetcode_user)
 
         current_total = userData['submitStats']['acSubmissionNum'][0]['submissions']
+        print(current_total)
+        print(prev_total)
 
         if current_total > prev_total:
             userSubs = model.getRecentSubs(leetcode_user)
