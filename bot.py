@@ -310,11 +310,11 @@ async def send_message():
                 embed.set_footer(text=currentTime)
             await bot.get_channel(channel).send(embed=embed)
 
-def create_leaderboard(top10, max_name_length):
+def create_leaderboard(top10):
     res_string = "```\nRank  Username         Submissions\n"
-    res_string += "1     ashdawngary      10\n"
-    res_string += "2     abcdefghijklmnp  5\n"
-    res_string += "3     agnes            2\n```"
+    for i in range(len(top10)):
+        row = top10[i]
+        res_string += "{num}     {name}".format(num = i, name = row[0]) + (' ' * (17 - len(row[0]))) + row[1] + '\n'
     
     return res_string
 
