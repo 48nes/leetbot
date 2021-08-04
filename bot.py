@@ -148,7 +148,7 @@ async def on_message(ctx: Context, message=""):
             await ctx.message.channel.send('No users present in database. Unable to create a leaderboard.')
             return
         
-        desc = create_leaderboard(top10, max_username_length)
+        desc = create_leaderboard(top10)
         embed: Embed = discord.Embed(title="Submissions Leaderboard", description=desc, color=15442752)
 
         await ctx.message.channel.send(embed=embed)
