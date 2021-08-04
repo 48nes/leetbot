@@ -238,8 +238,6 @@ async def send_message():
         userData = model.getUserData(leetcode_user)
 
         current_total = userData['submitStats']['acSubmissionNum'][0]['submissions']
-        print(current_total)
-        print(prev_total)
 
         if current_total > prev_total:
             userSubs = model.getRecentSubs(leetcode_user)
@@ -260,8 +258,7 @@ async def send_message():
                    + "](https://leetcode.com/problems/" + ''.join(submission[3]) \
                    + ") in " + ''.join(submission[2]) + "."
 
-            status = ''.join(submission[4])            
-            print(status)
+            status = ''.join(submission[4])
             if status == "Accepted":
                 embed: Embed = discord.Embed(title="Accepted", description=desc, color=5025616)
             else:
