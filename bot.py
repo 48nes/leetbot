@@ -314,15 +314,16 @@ def create_leaderboard(top10):
     
     for i in range(len(top10)):
         row = top10[i]
+        
+        if (row[1] != last_num and last_num != -1):
+            rank += 1
+        last_num = row[1]
+        
         if (len(row[0]) > 15):
             res_string += "{num}     {name}".format(num = str(rank), name = row[0][0:15]) + (' ' * (17 - len(row[0]))) + str(row[1]) + '\n'
             res_string += "      " + row[0][15:len(row[0])] + '\n'
         else:
             res_string += "{num}     {name}".format(num = str(rank), name = row[0]) + (' ' * (17 - len(row[0]))) + str(row[1]) + '\n'
-        
-        if (row[1] != last_num):
-            rank += 1
-        last_num = row[1]
         
     res_string += "```"
     return res_string
