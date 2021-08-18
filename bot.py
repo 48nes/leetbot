@@ -52,6 +52,7 @@ async def on_message(ctx: Context, message=""):
                         inline=False)
 
         await ctx.message.channel.send(embed=embed)
+
     elif ctx.invoked_with == 'add':
         # error message when no username is given
         if len(message) == 0:
@@ -61,12 +62,12 @@ async def on_message(ctx: Context, message=""):
             await ctx.message.channel.send(embed=embed)
             return
 
+        # get user and profile picture
         user = ctx.message.author
         profilepic = user.avatar_url
 
-        maybeLeetcode = check_discord(user.id)
-
-        if maybeLeetcode != "":
+        # checks to see if the user already has a leetcode account connected
+        if check_discord(user.id) != "":
             registered_username = ''.join(maybeLeetcode)
             desc = "You are already registered under [" + registered_username + "](https://leetcode.com/" \
                    + registered_username + "/)."
@@ -75,6 +76,7 @@ async def on_message(ctx: Context, message=""):
             await ctx.message.channel.send(embed=embed)
             return
 
+        # checks to make sure the leetcode account is not already registered under a different account
         if check_leetcode(message) != "":
             desc = "Username [" + message + "](https://leetcode.com/" + message + "/) is already registered."
             embed: Embed = discord.Embed(title="Already Registered", description=desc, color=15442752)
@@ -82,8 +84,8 @@ async def on_message(ctx: Context, message=""):
             await ctx.message.channel.send(embed=embed)
             return
 
+        # if the user exists then get their profile data and store it in the database
         request = requests.get('http://leetcode.com/' + message + '/')
-        # user exists on leetcode
         if request.status_code == 200:
 
             userData = model.getUserData(message)
@@ -117,6 +119,7 @@ async def on_message(ctx: Context, message=""):
         profilepic = user.avatar_url
         leetcode_username = ''.join(check_discord(user.id))
 
+        # checks to see that the user has a connected leetcode account
         if check_discord(user.id) == "":
             desc = "You do not have an account."
             embed: Embed = discord.Embed(title="Nothing to Remove", description=desc, color=15442752)
@@ -124,6 +127,7 @@ async def on_message(ctx: Context, message=""):
             await ctx.message.channel.send(embed=embed)
             return
 
+        # removes leetcode account from database
         remove_from_table(user.id)
 
         # success embed message
@@ -136,7 +140,9 @@ async def on_message(ctx: Context, message=""):
         embed.set_footer(text=currentTime, icon_url=profilepic)
 
         await ctx.message.channel.send(embed=embed)
+
     elif ctx.invoked_with == 'top':
+        # gets the top 10 leetcode accounts and displays a leaderboard with their ranking, names, and problems done
         top10 = None
         try:
             top10 = get_top10(message)
@@ -153,6 +159,7 @@ async def on_message(ctx: Context, message=""):
         embed: Embed = discord.Embed(title=tle, description=desc, color=15442752)
 
         await ctx.message.channel.send(embed=embed)
+
     elif ctx.invoked_with == 'my':
         user = ctx.message.author
         profilepic = user.avatar_url
@@ -161,6 +168,7 @@ async def on_message(ctx: Context, message=""):
         now = datetime.now()
         currentTime = now.strftime("%d-%m-%y %H:%M")
 
+        # checks to make sure an account exists
         if check_discord(user.id) == "":
             desc = "You do not have an account registered."
             embed: Embed = discord.Embed(title="Couldn't Find Account", description=desc, color=15442752)
@@ -168,6 +176,7 @@ async def on_message(ctx: Context, message=""):
             await ctx.message.channel.send(embed=embed)
             return
 
+        # gets data and displays account info
         userData = model.getUserData(leetcode_username)
 
         total = str(userData['submitStats']['acSubmissionNum'][0]['count'])
@@ -188,10 +197,12 @@ async def on_message(ctx: Context, message=""):
 
         embed.set_footer(text=currentTime, icon_url=profilepic)
         await ctx.message.channel.send(embed=embed)
+
     elif ctx.invoked_with == '+remove':
         user = ctx.message.author
         profilepic = user.avatar_url
 
+        # ensures user is an admin of the server
         if not ctx.message.author.guild_permissions.administrator:
             desc = "Channel setting is an admin only permission."
             embed: Embed = discord.Embed(title="Permission Denied", description=desc, color=15442752)
@@ -199,6 +210,7 @@ async def on_message(ctx: Context, message=""):
             await ctx.message.channel.send(embed=embed)
             return
 
+        # ensures username was given
         if len(message) == 0:
             desc = "No username was given."
             embed: Embed = discord.Embed(title="User Not Found", description=desc, color=15442752)
@@ -206,6 +218,7 @@ async def on_message(ctx: Context, message=""):
             await ctx.message.channel.send(embed=embed)
             return
 
+        # ensures the account is registered
         if not check_leetcode(message):
             desc = "Account is not registered."
             embed: Embed = discord.Embed(title="Nothing to Remove", description=desc, color=15442752)
@@ -224,7 +237,9 @@ async def on_message(ctx: Context, message=""):
         embed.set_footer(text=currentTime, icon_url=profilepic)
 
         await ctx.message.channel.send(embed=embed)
+
     elif ctx.invoked_with == '+set':
+        # ensures user is an admin of the server
         if not ctx.message.author.guild_permissions.administrator:
             desc = "Channel setting is an admin only permission."
             embed: Embed = discord.Embed(title="Permission Denied", description=desc, color=15442752)
@@ -251,7 +266,9 @@ async def on_message(ctx: Context, message=""):
             embed: Embed = discord.Embed(title="Channel Updated", description=desc, color=15442752)
 
             await ctx.message.channel.send(embed=embed)
+
     elif ctx.invoked_with == '+stop':
+        # ensures user is an admin of the server
         if not ctx.message.author.guild_permissions.administrator:
             desc = "Channel setting is an admin only permission."
             embed: Embed = discord.Embed(title="Permission Denied", description=desc, color=15442752)
@@ -265,7 +282,7 @@ async def on_message(ctx: Context, message=""):
 
         await ctx.message.channel.send(embed=embed)
 
-
+# every 30 seconds checks to find new submissions and upload them to the connected server
 @tasks.loop(seconds=30)
 async def send_message():
     rows = select_all()
@@ -307,6 +324,7 @@ async def send_message():
                 embed.set_footer(text=currentTime)
             await bot.get_channel(channel).send(embed=embed)
 
+# creates a formatted string to display the leaderboards of the command +top
 def create_leaderboard(top10):
     rank = 1
     last_num = -1
@@ -329,7 +347,7 @@ def create_leaderboard(top10):
     return res_string
 
 
-
+# starts the message loop
 send_message.start()
 
 # Runs the bot given bot token ID
