@@ -323,6 +323,7 @@ async def send_message():
             else:
                 embed: Embed = discord.Embed(title=status, description=desc, color=15277667)
                 embed.set_footer(text=currentTime)
+            print(channel, type(channel))
             await bot.get_channel(channel).send(embed=embed)
 
 # creates a formatted string to display the leaderboards of the command +top

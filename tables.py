@@ -160,7 +160,7 @@ def update_table(leetcode_username, num_total, num_easy, num_medium, num_hard, t
 
 '''
 Gets the last channel that the bot was connected to
-:return: int
+:return: long
 '''
 def get_last_channel():
     con = sql.connect(DATABASE_URL, sslmode='require')
@@ -173,7 +173,7 @@ def get_last_channel():
 
 '''
 Updates the database with the new channel
-:type channel: int
+:type channel: long
 :return: void
 '''
 def set_channel(channel):
