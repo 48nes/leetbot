@@ -179,4 +179,5 @@ def set_channel(channel):
     con = sql.connect(DATABASE_URL, sslmode='require')
     cur = con.cursor()
     cur.execute("UPDATE channel SET last_channel=" + channel)
+    con.commit()
     con.close()
