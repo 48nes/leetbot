@@ -168,7 +168,6 @@ def get_last_channel():
     cur.execute("SELECT * FROM channel")
     channel = cur.fetchone()[0]
     con.close()
-    print(channel, type(channel))
     return channel
 
 '''
