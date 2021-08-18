@@ -166,8 +166,9 @@ def get_last_channel():
     con = sql.connect(DATABASE_URL, sslmode='require')
     cur = con.cursor()
     cur.execute("SELECT * FROM channel")
+    channel = cur.fetchone()[0]
     con.close()
-    return cur.fetchone()[0]
+    return channel
 
 '''
 Updates the database with the new channel
