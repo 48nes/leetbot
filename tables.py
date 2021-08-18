@@ -157,3 +157,25 @@ def update_table(leetcode_username, num_total, num_easy, num_medium, num_hard, t
         "leetcode_username=%s", (num_total, num_easy, num_medium, num_hard, total_subs, leetcode_username,))
     con.commit()
     con.close()
+
+'''
+Gets the last channel that the bot was connected to
+:return: int
+'''
+def get_last_channel():
+    con = sql.connect(DATABASE_URL, sslmode='require')
+    cur = con.cursor()
+    cur.execute("SELECT * FROM channel")
+    con.close()
+    return cur.fetchone()[0]
+
+'''
+Updates the database with the new channel
+:type channel: int
+:return: void
+'''
+def set_channel(channel):
+    con = sql.connect(DATABASE_URL, sslmode='require')
+    cur = con.cursor()
+    cur.execute("UPDATE channel SET last_channel=" + channel)
+    con.close()

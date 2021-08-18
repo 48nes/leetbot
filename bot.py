@@ -3,7 +3,7 @@ import os
 
 # Obtain bot token from Discord Developer Site
 import discord
-from discord import Embed, User, Member, TextChannel
+from discord import Embed, TextChannel
 from discord.ext import commands, tasks
 from discord.ext.commands import Context
 from datetime import datetime
@@ -28,7 +28,7 @@ bot = commands.Bot(command_prefix='+', intents=intents)
 bot.remove_command('help')
 
 # channel configuration
-channel = -1
+channel = get_last_channel()
 
 
 # bot commands
@@ -260,8 +260,8 @@ async def on_message(ctx: Context, message=""):
             await ctx.message.channel.send(embed=embed)
         else:
             new_channel: TextChannel = ctx.message.channel_mentions[0]
-            global channel
             channel = new_channel.id
+            set_channel(channel)
             desc = "Channel successfully set to " + new_channel.mention + "."
             embed: Embed = discord.Embed(title="Channel Updated", description=desc, color=15442752)
 
@@ -277,6 +277,7 @@ async def on_message(ctx: Context, message=""):
             return
 
         channel = -1
+        set_channel(-1)
         desc = "Notifications successfully disabled."
         embed: Embed = discord.Embed(title="Feed Disabled", description=desc, color=15442752)
 
