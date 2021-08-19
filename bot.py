@@ -203,7 +203,7 @@ async def on_message(ctx: Context, message=""):
         profilepic = user.avatar_url
 
         # ensures user is an admin of the server
-        if not ctx.message.author.guild_permissions.administrator and ctx.message.author.id != 251785877494300692:
+        if not ctx.message.author.guild_permissions.administrator:
             desc = "Channel setting is an admin only permission."
             embed: Embed = discord.Embed(title="Permission Denied", description=desc, color=15442752)
 
@@ -240,7 +240,7 @@ async def on_message(ctx: Context, message=""):
 
     elif ctx.invoked_with == '+set':
         # ensures user is an admin of the server
-        if not ctx.message.author.guild_permissions.administrator and ctx.message.author.id != 251785877494300692:
+        if not ctx.message.author.guild_permissions.administrator:
             desc = "Channel setting is an admin only permission."
             embed: Embed = discord.Embed(title="Permission Denied", description=desc, color=15442752)
 
@@ -269,7 +269,7 @@ async def on_message(ctx: Context, message=""):
 
     elif ctx.invoked_with == '+stop':
         # ensures user is an admin of the server
-        if not ctx.message.author.guild_permissions.administrator and ctx.message.author.id != 251785877494300692:
+        if not ctx.message.author.guild_permissions.administrator:
             desc = "Channel setting is an admin only permission."
             embed: Embed = discord.Embed(title="Permission Denied", description=desc, color=15442752)
 
